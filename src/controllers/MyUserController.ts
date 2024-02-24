@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import User from "../models/user";
-import { readSync } from "fs";
 
 const getCurrentUser = async (req: Request, res: Response) => {
   try {
@@ -17,13 +16,13 @@ const getCurrentUser = async (req: Request, res: Response) => {
 const createCurrentUser = async (req: Request, res: Response) => {
   try {
     const { auth0Id } = req.body;
-
-    const existingUser = await User.findOne(auth0Id);
+    // console.log("req", req);
+    const existingUser = await User.findOne({ auth0Id });
 
     if (existingUser) {
       return res.status(200).send();
     }
-
+    console.log("body", req.body);
     const newUser = new User(req.body);
     await newUser.save();
 
@@ -56,7 +55,7 @@ const updateCurrentUser = async (req: Request, res: Response) => {
   }
 };
 export default {
+  getCurrentUser,
   createCurrentUser,
   updateCurrentUser,
-  getCurrentUser,
 };
